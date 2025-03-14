@@ -23,7 +23,11 @@ def read_files(file_paths):
     for path in file_paths:
         try:
             with open(path, 'r', encoding='utf-8') as f:
-                lines.extend(f.readlines())
+                file_lines = f.readlines()
+                # Удаляем первую строку, если она короткая (заголовок)
+                if len(file_lines) > 0 and len(file_lines[0].strip()) <= 300:
+                    file_lines = file_lines[1:]
+                lines.extend(file_lines)
         except Exception as e:
             print(f"Ошибка чтения файла {path}: {str(e)}")
     return lines
@@ -91,9 +95,13 @@ def parsing():
     # Шаг 1: Получение и обработка файлов
     base_path, file_paths = get_input_files()
 
+    # Создаём папку MSOS_output, если её нет
+    output_dir = os.path.join(base_path, "MSOS_output")
+    os.makedirs(output_dir, exist_ok=True)
+
     # Шаг 2: Создание общего файла
     all_lines = read_files(file_paths)
-    general_msos_path = os.path.join(base_path, 'general_MSOS.txt')
+    general_msos_path = os.path.join(output_dir, 'general_MSOS.txt')
     write_file(general_msos_path, all_lines)
     print("Группировка указанных файлов завершена.")
 
@@ -111,7 +119,7 @@ def parsing():
 
     # Шаг 2.5: Фильтрация строк
     filtered_lines = filter_lines(general_MSOS_lines, filter_str)
-    general_msos_filter_path = os.path.join(base_path, 'general_MSOS_filter.txt')
+    general_msos_filter_path = os.path.join(output_dir, 'general_MSOS_filter.txt')
     write_file(general_msos_filter_path, filtered_lines)
     print(f"Число записей по указанному фильтру: {len(filtered_lines)}")
     print(f'Результат сохранён в файл "{general_msos_filter_path}"')
@@ -130,7 +138,7 @@ def parsing():
     if dedup_choice == "1":
         # Шаг 4: Удаление дубликатов
         unique_lines = deduplicate(sorted_lines)
-        general_msos_deduplicate_path = os.path.join(base_path, 'general_MSOS_filter_deduplicate.txt')
+        general_msos_deduplicate_path = os.path.join(output_dir, 'general_MSOS_filter_deduplicate.txt')
         write_file(general_msos_deduplicate_path, unique_lines)
         print(f"Число уникальных записей: {len(unique_lines)}")
         print(f'Результат сохранён в файл "{general_msos_deduplicate_path}"')
@@ -158,7 +166,7 @@ def parsing():
 
     # Фильтрация по временному диапазону
     filtered_by_time = filter_by_time_range(lines, min_time, max_time)
-    custom_msos_datetime_path = os.path.join(base_path, 'custom_MSOS_datetime_output.txt')
+    custom_msos_datetime_path = os.path.join(output_dir, 'custom_MSOS_datetime_output.txt')
     write_file(custom_msos_datetime_path, filtered_by_time)
     print(f"Число записей по новым границам: {len(filtered_by_time)}")
     print(f'Результат сохранён в файл "{custom_msos_datetime_path}"')
