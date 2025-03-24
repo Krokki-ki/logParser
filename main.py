@@ -1,3 +1,4 @@
+"""
 from datetime import datetime
 
 # Функция для преобразования строки в объект datetime
@@ -103,3 +104,4 @@ def main():
 # Запуск программы
 if __name__ == "__main__":
     main()
+"""

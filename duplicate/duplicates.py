@@ -1,5 +1,7 @@
 from collections import Counter
 
+
+"""
 # Программа считывает файл, затем сортирует и убирает дубли
 def read_file(filename):
     """Чтение строк из файла."""
@@ -55,3 +57,4 @@ def duplicate():
 
 if __name__ == "__main__":
     duplicate()
+"""

@@ -2,7 +2,6 @@ import os
 import re
 from collections import OrderedDict
 
-
 def get_input_files():
     """Получение путей к файлам от пользователя"""
     base_path = input("Введите полный путь к папке с файлами: ").strip()
@@ -15,7 +14,6 @@ def get_input_files():
     file_names = [f"{name.strip()}.txt" for name in input(files_prompt).split(',')]
 
     return base_path, [os.path.join(base_path, fname) for fname in file_names]
-
 
 def read_files(file_paths):
     """Чтение данных из файлов с обработкой ошибок"""
@@ -38,32 +36,26 @@ def write_file(file_path, lines):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 
-
 def deduplicate(lines):
     """Удаление дубликатов с сохранением порядка"""
     return list(OrderedDict.fromkeys(lines))
 
-
 def filter_lines(lines, filter_str):
     """Фильтрация строк по подстроке"""
     return [line for line in lines if filter_str in line]
-
 
 def extract_timestamp(line):
     """Извлечение временной метки из строки"""
     match = re.search(r'"@timestamp":"([^"]+)"', line)
     return match.group(1) if match else None
 
-
 def sort_lines_by_timestamp(lines):
     """Сортировка строк по временной метке (по убыванию)"""
     return sorted(lines, key=lambda x: extract_timestamp(x), reverse=True)
 
-
 def filter_by_time_range(lines, min_time, max_time):
     """Фильтрация строк по временному диапазону"""
     return [line for line in lines if min_time <= extract_timestamp(line) <= max_time]
-
 
 def process_timestamps_in_file(file_path):
     """Обработка временных меток в файле: замена T на пробел и удаление временной зоны"""
@@ -89,7 +81,6 @@ def process_timestamps_in_file(file_path):
     # Перезаписываем файл с обработанными строками
     with open(file_path, 'w', encoding='utf-8') as f:
         f.writelines(processed_lines)
-
 
 def parsing():
     # Шаг 1: Получение и обработка файлов
@@ -175,7 +166,6 @@ def parsing():
     if filtered_by_time:
         print(f"Минимальное значение нового временного диапазона: {extract_timestamp(filtered_by_time[-1])}")
         print(f"Максимальное значение нового временного диапазона: {extract_timestamp(filtered_by_time[0])}")
-
 
 if __name__ == "__main__":
     parsing()

@@ -1,7 +1,6 @@
 from parseLogFromMSOS.parsing import parsing
 from parseLogFromELK.parsing_easy import parsing_easy
 
-
 def run():
     print("Чтобы выбрать режим обработки логов из Marathon, нажмите 1")
     print("Чтобы выбрать режим обработки логов из ELK, нажмите 2")
@@ -30,9 +29,6 @@ def continue_work():
              return False
          else:
              print("Неверный выбор. Программа завершена.")
-
-
-
 
 if __name__ == "__main__":
     while True:     # Основной цикл программы

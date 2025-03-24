@@ -3,7 +3,6 @@ from datetime import datetime
 import re
 from collections import OrderedDict
 
-
 def get_input_files():
     """Получение путей к файлам от пользователя"""
     base_path = input("Введите полный путь к папке с файлами: ").strip()
@@ -16,7 +15,6 @@ def get_input_files():
     file_names = [f"{name.strip()}.txt" if not name.strip().endswith('.csv') else f"{name.strip()}.csv" for name in input(files_prompt).split(',')]
 
     return base_path, [os.path.join(base_path, fname) for fname in file_names]
-
 
 def read_files(file_paths):
     """Чтение данных из файлов с обработкой ошибок и удалением заголовков"""
@@ -33,40 +31,33 @@ def read_files(file_paths):
             print(f"Ошибка чтения файла {path}: {str(e)}")
     return lines
 
-
 def write_file(file_path, lines):
     """Запись данных в файл"""
     with open(file_path, 'w', encoding='utf-8') as f:
         f.writelines(lines)
 
-
 def deduplicate(lines):
     """Удаление дубликатов с сохранением порядка"""
     return list(OrderedDict.fromkeys(lines))
 
-
 def filter_lines(lines, filter_str):
     """Фильтрация строк по подстроке"""
     return [line for line in lines if filter_str in line]
-
 
 def convert_date_format(date_str):
     """Преобразование формата даты"""
     dt = datetime.strptime(date_str, "%d.%m.%Y %H:%M:%S.%f")
     return dt.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]  # Обрезаем до 3 знаков в миллисекундах
 
-
 def extract_timestamp_old(line):
     """Извлечение даты из строки (старое регулярное выражение)"""
     match = re.search(r'\d{2}\.\d{2}\.\d{4}\s*\d{2}:\d{2}:\d{2}\.\d{3}', line)
     return match.group(0) if match else None
 
-
 def extract_timestamp_new(line):
     """Извлечение даты из строки (новое регулярное выражение)"""
     match = re.search(r'\d{4}-\d{2}-\d{2}\s*\d{2}:\d{2}:\d{2}\.\d{3}', line)
     return match.group(0) if match else None
-
 
 def parsing_easy():
     # Шаг 1: Получение и обработка файлов
