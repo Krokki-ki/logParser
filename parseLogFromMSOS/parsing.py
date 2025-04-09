@@ -1,6 +1,7 @@
 import os
 import re
 from collections import OrderedDict
+from tqdm import tqdm  # Добавлен импорт прогресс-бара
 
 def get_input_files():
     """Получение путей к файлам от пользователя"""
@@ -18,7 +19,7 @@ def get_input_files():
 def read_files(file_paths):
     """Чтение данных из файлов с обработкой ошибок"""
     lines = []
-    for path in file_paths:
+    for path in tqdm(file_paths, desc="Чтение файлов", unit="файл"):  # Прогресс-бар
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 file_lines = f.readlines()
@@ -63,7 +64,7 @@ def process_timestamps_in_file(file_path):
         lines = f.readlines()
 
     processed_lines = []
-    for line in lines:
+    for line in tqdm(lines, desc="Обработка временных меток", unit="строка"):  # Прогресс-бар
         # Шаг 1: Удаляем символ "T" только в подстроке, соответствующей временной метке
         line = re.sub(
             r'([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2})(\.[0-9]+)?\+[0-9]{2}:[0-9]{2}',
@@ -125,7 +126,7 @@ def parsing():
         print(f"Минимальное значение: {extract_timestamp(sorted_lines[-1])}")
 
     # Шаг 3: Запрос на проверку дубликатов
-    dedup_choice = input("Вы хотите выполнить проверку на дубли записей?\n1 - Да, 2 - Нет\n")
+    dedup_choice = input("\nВы хотите выполнить проверку на дубли записей?\n1 - Да, 2 - Нет\n")
     if dedup_choice == "1":
         # Шаг 4: Удаление дубликатов
         unique_lines = deduplicate(sorted_lines)

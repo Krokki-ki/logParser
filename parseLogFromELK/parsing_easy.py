@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import re
 from collections import OrderedDict
+from tqdm import tqdm  # Добавлен импорт прогресс-бара
 
 def get_input_files():
     """Получение путей к файлам от пользователя"""
@@ -19,7 +20,7 @@ def get_input_files():
 def read_files(file_paths):
     """Чтение данных из файлов с обработкой ошибок и удалением заголовков"""
     lines = []
-    for path in file_paths:
+    for path in tqdm(file_paths, desc="Чтение файлов", unit="файл"):  # Прогресс-бар
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 file_lines = f.readlines()
@@ -75,7 +76,7 @@ def parsing_easy():
 
     # Шаг 3: Конвертация и сортировка строк
     converted_lines = []
-    for line in all_lines:
+    for line in tqdm(all_lines, desc="Конвертация дат", unit="строка"):  # Прогресс-бар
         timestamp = extract_timestamp_old(line)
         if timestamp:
             new_timestamp = convert_date_format(timestamp)
@@ -107,7 +108,7 @@ def parsing_easy():
         print(f"Минимальное значение datetime: {extract_timestamp_new(filtered_lines[-1])}")
 
     # Шаг 6: Запрос на проверку дубликатов
-    dedup_choice = input("Вы хотите выполнить проверку на дубли записей?\n1 - Да, 2 - Нет\n")
+    dedup_choice = input("\nВы хотите выполнить проверку на дубли записей?\n1 - Да, 2 - Нет\n")
     if dedup_choice == "1":
         unique_lines = deduplicate(filtered_lines)
         general_elk_deduplicate_path = os.path.join(output_dir, 'general_ELK_filter_deduplicate.txt')
